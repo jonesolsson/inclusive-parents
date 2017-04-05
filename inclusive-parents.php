@@ -108,6 +108,6 @@ function scl_is_on_admin_screen() {
 	global $pagenow;
 	return is_admin()
 		&& ($pagenow == 'customize.php'
-			  || DOING_AJAX
+			  || (defined('DOING_AJAX') && DOING_AJAX)
 				|| (function_exists('get_current_screen') && 'nav-menus' == get_current_screen()->base));
 }
