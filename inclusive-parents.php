@@ -32,8 +32,8 @@ add_filter( 'widget_pages_args', 'scl_list_pages_args' );
  * @return array $dropdown_args
  */
 function scl_page_attributes_metabox_add_parents( $dropdown_args, $post = NULL ) {
-	$dropdown_args['post_status'] = array( 'publish', 'draft', 'pending', 'future', 'private' );
-	return $dropdown_args;
+  $dropdown_args['post_status'] = array( 'publish', 'draft', 'pending', 'future', 'private' );
+  return $dropdown_args;
 }
 
 add_filter( 'page_attributes_dropdown_pages_args', 'scl_page_attributes_metabox_add_parents', 10, 2 ); 
@@ -47,15 +47,15 @@ add_filter( 'quick_edit_dropdown_pages_args', 'scl_page_attributes_metabox_add_p
  * @return string $title
  */
 function scl_page_parent_dropdown_status_label( $title, $page ) {
-	if ( !is_admin() )
-		return $title;
-		
-	$post_status = $page->post_status;
-	if ( $post_status !== __( 'publish' ) ) {
-		$status = get_post_status_object( $post_status );
-		$title .= " ($status->label)";
-	}
-	return $title;
+  if ( !is_admin() )
+    return $title;
+    
+  $post_status = $page->post_status;
+  if ( $post_status !== __( 'publish' ) ) {
+    $status = get_post_status_object( $post_status );
+    $title .= " ($status->label)";
+  }
+  return $title;
 }
 
 add_filter( 'list_pages', 'scl_page_parent_dropdown_status_label', 10, 2 );
@@ -69,35 +69,21 @@ add_filter( 'list_pages', 'scl_page_parent_dropdown_status_label', 10, 2 );
  * @return string $title
  */
 function scl_menu_checklist_status_label( $title, $page_id ) {
-	if ( empty( $page_id ) )
-		return $title;
-		
-	if ( scl_is_on_admin_screen() ) {	
-		$post_status = get_post_status( $page_id );
-		if ( $post_status !== __( 'publish' ) ) {
-			$status = get_post_status_object( $post_status );
-			$title .= " ($status->label)";
-		}
-	}
-	return $title;
+  if ( empty( $page_id ) )
+    return $title;
+    
+  if ( scl_is_on_admin_screen() ) {	
+    $post_status = get_post_status( $page_id );
+    if ( $post_status !== __( 'publish' ) ) {
+      $status = get_post_status_object( $post_status );
+      $title .= " ($status->label)";
+    }
+  }
+  return $title;
 }
 
 add_filter( 'the_title', 'scl_menu_checklist_status_label', 10, 2 );
 
-/**
- * Filter pages metabox on menu admin screen to include private pages.
- *
- * @param object $query
- * @return object $query
- */
-function scl_menu_screen_add_private_pages( $query ) {
-	if ( is_admin() && 'nav-menus' == scl_is_on_admin_screen() ) {
-		$query->set( 'post_status', array( 'publish', 'private', 'password' ) );
-	}	
-	return $query;
-}
-
-add_filter( 'pre_get_posts', 'scl_menu_screen_add_private_pages' );
 /**
  * Determine whether we're on an admin screen where filtering by page status
  * is likely to happen.
@@ -105,9 +91,9 @@ add_filter( 'pre_get_posts', 'scl_menu_screen_add_private_pages' );
  * @return  boolean whether we're on a relevant admin screen
  */
 function scl_is_on_admin_screen() {
-	global $pagenow;
-	return is_admin()
-		&& ($pagenow == 'customize.php'
-			  || (defined('DOING_AJAX') && DOING_AJAX)
-				|| (function_exists('get_current_screen') && 'nav-menus' == get_current_screen()->base));
+  global $pagenow;
+  return is_admin()
+    && ($pagenow == 'customize.php'
+        || (defined('DOING_AJAX') && DOING_AJAX)
+        || (function_exists('get_current_screen') && 'nav-menus' == get_current_screen()->base));
 }
